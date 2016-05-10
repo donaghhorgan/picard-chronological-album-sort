@@ -1,7 +1,7 @@
 PLUGIN_NAME = 'Album Sorting'
 PLUGIN_AUTHOR = 'Donagh Horgan'
-PLUGIN_DESCRIPTION = 'Sorts albums chronologically.'
-PLUGIN_VERSION = "1.0"
+PLUGIN_DESCRIPTION = 'Sorts albums chronologically, according to the earliest available date.'
+PLUGIN_VERSION = "1.01"
 PLUGIN_API_VERSIONS = ["0.12", "0.15"]
 
 from picard.metadata import register_album_metadata_processor
@@ -32,8 +32,11 @@ def add_albumsort(tagger, metadata, release):
     elif date:
         earliest = date
     else:
-        earliest = ""
+        earliest = None
     
-    metadata["albumsort"] = earliest + " " + metadata["album"]
+    if earliest:
+        metadata["date"] = earliest
+        metadata["originaldate"] = earliest
+        metadata["albumsort"] = earliest + " " + metadata["album"]
 
 register_album_metadata_processor(add_albumsort)
